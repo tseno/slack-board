@@ -1,0 +1,39 @@
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace:cached
+      - /workspace/backend/vendor
+      - /workspace/frontend/node_modules
+    working_dir: /workspace
+    command: sleep infinity
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=slack_board
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+      - "5173:5173"
+
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: slack_board
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:

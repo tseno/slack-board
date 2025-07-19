@@ -1,0 +1,49 @@
+{
+  "name": "Slack-like Board Development",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "runServices": ["app", "db"],
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "bash -c 'cd backend && if [ -f composer.json ]; then composer install; fi && cd ../frontend && if [ -f package.json ]; then npm install; fi'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "bmewburn.vscode-intelephense-client",
+        "ms-vscode.vscode-json",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-eslint"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "php.suggest.basic": false,
+        "php.validate.enable": false,
+        "intelephense.diagnostics.enable": true,
+        "intelephense.completion.maxItems": 100
+      }
+    }
+  },
+  "forwardPorts": [8000, 5173, 5432],
+  "portsAttributes": {
+    "8000": {
+      "label": "Laravel API",
+      "onAutoForward": "notify",
+      "protocol": "http"
+    },
+    "5173": {
+      "label": "Vite Dev Server",
+      "onAutoForward": "notify",
+      "protocol": "http"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent",
+      "protocol": "tcp"
+    }
+  },
+  "remoteEnv": {
+    "DISPLAY": ":0"
+  }
+}
